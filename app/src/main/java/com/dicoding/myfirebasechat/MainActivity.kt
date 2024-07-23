@@ -21,8 +21,10 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
+import com.google.firebase.database.ktx.database
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -30,18 +32,20 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
+
     private lateinit var db: FirebaseDatabase
     private lateinit var adapter: FirebaseMessageAdapter
 
-    private val requestNotificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            Toast.makeText(this, "Notification permission granted", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Notification permission rejected", Toast.LENGTH_SHORT).show()
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                Toast.makeText(this, "Notifications permission granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Notifications permission rejected", Toast.LENGTH_SHORT).show()
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,16 +56,16 @@ class MainActivity : AppCompatActivity() {
             requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
 
-        auth = Firebase.auth
+        auth = com.google.firebase.ktx.Firebase.auth
         val firebaseUser = auth.currentUser
-
         if (firebaseUser == null) {
+            // Not signed in, launch the Login activity
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
             return
         }
 
-        db = Firebase.database
+        db = com.google.firebase.ktx.Firebase.database
 
         val messagesRef = db.reference.child(MESSAGES_CHILD)
 
@@ -72,7 +76,6 @@ class MainActivity : AppCompatActivity() {
                 firebaseUser.photoUrl.toString(),
                 Date().time
             )
-
             messagesRef.push().setValue(friendlyMessage) { error, _ ->
                 if (error != null) {
                     Toast.makeText(
@@ -85,7 +88,6 @@ class MainActivity : AppCompatActivity() {
                         .show()
                 }
             }
-
             binding.messageEditText.setText("")
         }
 
@@ -100,12 +102,12 @@ class MainActivity : AppCompatActivity() {
         binding.messageRecyclerView.adapter = adapter
     }
 
-    override fun onResume() {
+    public override fun onResume() {
         super.onResume()
         adapter.startListening()
     }
 
-    override fun onPause() {
+    public override fun onPause() {
         adapter.stopListening()
         super.onPause()
     }

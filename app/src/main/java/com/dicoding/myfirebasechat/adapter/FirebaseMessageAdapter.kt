@@ -15,23 +15,17 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 
 class FirebaseMessageAdapter(
     options: FirebaseRecyclerOptions<Message>,
-    private val currentUserName: String?,
+    private val currentUserName: String?
 ) : FirebaseRecyclerAdapter<Message, FirebaseMessageAdapter.MessageViewHolder>(options) {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): FirebaseMessageAdapter.MessageViewHolder {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.item_message, parent, false)
         val binding = ItemMessageBinding.bind(view)
         return MessageViewHolder(binding)
     }
 
-    override fun onBindViewHolder(
-        holder: FirebaseMessageAdapter.MessageViewHolder,
-        position: Int,
-        model: Message
-    ) {
+    override fun onBindViewHolder(holder: MessageViewHolder, position: Int, model: Message) {
         holder.bind(model)
     }
 
@@ -58,5 +52,4 @@ class FirebaseMessageAdapter(
             }
         }
     }
-
 }
