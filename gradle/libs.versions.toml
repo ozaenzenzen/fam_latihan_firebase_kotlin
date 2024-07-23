@@ -16,6 +16,8 @@ firebaseAuth = "23.0.0"
 playServicesAuth = "21.1.1"
 credentials = "1.2.2"
 googleid = "1.1.0"
+firebaseConfig = "22.0.0"
+firebaseDatabaseKtx = "21.0.0"
 
 
 [libraries]
@@ -33,6 +35,8 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config", version.ref = "firebaseConfig" }
+firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
 
 
 [plugins]
