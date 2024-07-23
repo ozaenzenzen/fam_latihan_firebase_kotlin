@@ -1,4 +1,4 @@
-package com.dicoding.data
+package com.dicoding.myfirebasechat.data
 
 data class Message (
     val text: String? = null,

@@ -10,8 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.lifecycle.lifecycleScope
-import com.dicoding.data.Message
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.myfirebasechat.adapter.FirebaseMessageAdapter
+import com.dicoding.myfirebasechat.data.Message
 import com.dicoding.myfirebasechat.databinding.ActivityMainBinding
+import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseDatabase
+    private lateinit var adapter: FirebaseMessageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +71,26 @@ class MainActivity : AppCompatActivity() {
 
             binding.messageEditText.setText("")
         }
+
+        val manager = LinearLayoutManager(this)
+        manager.stackFromEnd = true
+        binding.messageRecyclerView.layoutManager = manager
+
+        val options = FirebaseRecyclerOptions.Builder<Message>()
+            .setQuery(messagesRef, Message::class.java)
+            .build()
+        adapter = FirebaseMessageAdapter(options, firebaseUser.displayName)
+        binding.messageRecyclerView.adapter = adapter
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.startListening()
+    }
+
+    override fun onPause() {
+        adapter.stopListening()
+        super.onPause()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
